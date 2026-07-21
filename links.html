@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HACON — Todos os Links</title>
+<meta name="description" content="WhatsApp, Instagram, blog e proposta técnica do controlador de exportação zero grid da HACON.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://hacon.tech/links">
+
+<style>
+:root{
+  --verde:#7DD321;
+  --verde-esc:#5fa717;
+  --verde-glow:rgba(125,211,33,.35);
+  --bg:#0a0f0a;
+  --bg-2:#0f1710;
+  --card:#131c13;
+  --linha:rgba(125,211,33,.14);
+  --txt:#eaf3e6;
+  --txt-mut:#9fb098;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+  background:
+    radial-gradient(120% 60% at 50% 0%, var(--verde-glow) 0%, transparent 55%),
+    linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%);
+  color:var(--txt);min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;
+  padding:56px 20px 40px;
+}
+.logo-wrap{margin-bottom:6px}
+.logo-wrap img{height:46px;width:auto;display:block}
+.tag{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;
+  letter-spacing:2px;font-size:13px;color:var(--verde);margin:14px 0 30px;text-align:center;
+}
+.tag::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--verde);box-shadow:0 0 8px var(--verde);margin-right:8px;vertical-align:middle}
+
+.links{width:100%;max-width:420px;display:flex;flex-direction:column;gap:14px}
+.link-btn{
+  display:flex;align-items:center;gap:14px;
+  background:linear-gradient(150deg,var(--card),#0c130c);
+  border:1px solid var(--linha);border-radius:14px;
+  padding:18px 20px;transition:transform .15s,border-color .15s,box-shadow .15s;
+}
+.link-btn:hover{transform:translateY(-3px);border-color:var(--verde);box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.link-btn .ic{
+  flex-shrink:0;width:40px;height:40px;border-radius:10px;
+  background:rgba(125,211,33,.1);display:flex;align-items:center;justify-content:center;
+}
+.link-btn .ic svg{width:20px;height:20px;fill:var(--verde)}
+.link-btn .txt{flex:1}
+.link-btn .txt .t{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;
+  letter-spacing:.5px;font-size:16px;color:#fff;
+}
+.link-btn .txt .s{font-size:13px;color:var(--txt-mut);margin-top:2px}
+.link-btn .arrow{color:var(--verde);font-size:20px;flex-shrink:0}
+
+.link-btn.primary{
+  background:var(--verde);border-color:var(--verde);
+}
+.link-btn.primary .ic{background:rgba(6,33,10,.15)}
+.link-btn.primary .ic svg{fill:#06210a}
+.link-btn.primary .txt .t,.link-btn.primary .txt .s{color:#06210a}
+.link-btn.primary .arrow{color:#06210a}
+
+footer{margin-top:44px;text-align:center;color:var(--txt-mut);font-size:12px;max-width:420px}
+footer a{color:var(--verde);text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="logo-wrap">
+  <img src="img/hacon-logo.png" alt="HACON — Hoeschl Automação e Controle" width="657" height="150" onerror="this.style.display='none'">
+</div>
+<div class="tag">Controle de Exportação Zero Grid</div>
+
+<div class="links">
+
+  <a class="link-btn primary" href="https://forms.gle/yEEzfrVGqgzBQJaM7" target="_blank" rel="noopener">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 7h16v2H4v-2zm0 7h10v2H4v-2z"/></svg></div>
+    <div class="txt"><div class="t">Solicitar Proposta</div><div class="s">Formulário técnico · resposta rápida</div></div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a class="link-btn" href="https://wa.me/5548988284491?text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20sobre%20o%20controlador%20de%20exporta%C3%A7%C3%A3o%20zero%20da%20HACON." target="_blank" rel="noopener">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.2-.6.1-.2.3-.7.9-.8 1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.2 0-.3 0-.5-.1-.2-.6-1.5-.9-2-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.6 1.1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.5.6.2 1.2.2 1.6.1.5-.1 1.7-.7 1.9-1.3.2-.7.2-1.2.2-1.3-.1-.2-.3-.2-.5-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3C4 15.4 3.5 13.7 3.5 12 3.5 7.3 7.3 3.5 12 3.5S20.5 7.3 20.5 12 16.7 20 12 20z"/></svg></div>
+    <div class="txt"><div class="t">Falar no WhatsApp</div><div class="s">+55 48 98828-4491</div></div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a class="link-btn" href="https://instagram.com/haconzerogrid" target="_blank" rel="noopener">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2c2.7 0 3.06.01 4.12.06 1.06.05 1.79.22 2.43.47.66.26 1.21.6 1.76 1.15.55.55.89 1.1 1.15 1.76.25.64.42 1.37.47 2.43C21.99 8.94 22 9.3 22 12s-.01 3.06-.06 4.12c-.05 1.06-.22 1.79-.47 2.43a4.9 4.9 0 0 1-1.15 1.76 4.9 4.9 0 0 1-1.76 1.15c-.64.25-1.37.42-2.43.47C15.06 21.99 14.7 22 12 22s-3.06-.01-4.12-.06c-1.06-.05-1.79-.22-2.43-.47a4.9 4.9 0 0 1-1.76-1.15 4.9 4.9 0 0 1-1.15-1.76c-.25-.64-.42-1.37-.47-2.43C2.01 15.06 2 14.7 2 12s.01-3.06.06-4.12c.05-1.06.22-1.79.47-2.43.26-.66.6-1.21 1.15-1.76A4.9 4.9 0 0 1 5.44.54C6.08.29 6.81.12 7.87.07 8.94.01 9.3 0 12 0zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8.2A3.2 3.2 0 1 1 12 6.8a3.2 3.2 0 0 1 0 6.4zm5.4-8.4a1.2 1.2 0 1 1-2.4 0 1.2 1.2 0 0 1 2.4 0z"/></svg></div>
+    <div class="txt"><div class="t">Instagram</div><div class="s">@haconzerogrid</div></div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a class="link-btn" href="https://hacon.tech/blog" target="_blank" rel="noopener">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M4 4h16v2H4V4zm0 5h16v2H4V9zm0 5h10v2H4v-2zm0 5h10v2H4v-2z"/></svg></div>
+    <div class="txt"><div class="t">Blog</div><div class="s">Guias técnicos sobre exportação zero</div></div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a class="link-btn" href="https://hacon.tech" target="_blank" rel="noopener">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 2c1.1 1.4 1.9 3.2 2.2 5H9.8c.3-1.8 1.1-3.6 2.2-5zM7.8 9c-.1.6-.2 1.3-.2 2s.1 1.4.2 2H4.3c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2h3.5zm.3 6h1.7c.3 1.8 1.1 3.6 2.2 5-1.1-1.4-1.9-3.2-2.2-5H8.1zm3.9 5c1.1-1.4 1.9-3.2 2.2-5h1.7c-.3 1.8-1.1 3.6-2.2 5h-1.7zm5.8-7c.1-.6.2-1.3.2-2s-.1-1.4-.2-2h3.5c.2.6.3 1.3.3 2s-.1 1.4-.3 2h-3.5zm-.5-6h-1.7c-.3-1.8-1.1-3.6-2.2-5 1.1 1.4 1.9 3.2 2.2 5h1.7z"/></svg></div>
+    <div class="txt"><div class="t">Site Principal</div><div class="s">hacon.tech</div></div>
+    <div class="arrow">→</div>
+  </a>
+
+  <a class="link-btn" href="mailto:contato@hacon.tech">
+    <div class="ic"><svg viewBox="0 0 24 24"><path d="M2 4h20v16H2V4zm2 2.5V18h16V6.5l-8 5-8-5zm.6-.5L12 9.5 19.4 6H4.6z"/></svg></div>
+    <div class="txt"><div class="t">E-mail</div><div class="s">contato@hacon.tech</div></div>
+    <div class="arrow">→</div>
+  </a>
+
+</div>
+
+<footer>
+  HACON — Hoeschl Automação e Controle Ltda<br>
+  <a href="https://hacon.tech">hacon.tech</a> · <a href="https://hacon.tech/politica-de-privacidade">Política de Privacidade</a>
+</footer>
+
+</body>
+</html>
