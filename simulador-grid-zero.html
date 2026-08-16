@@ -80,12 +80,44 @@ header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,10,
 .hero p.lead{font-size:16px;color:var(--txt-mut);max-width:680px;font-family:'Segoe UI',sans-serif;text-transform:none;margin-bottom:0}
 
 section.simulador{padding:20px 0 70px}
-.sim-card{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:28px 30px}
+.sim-card{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:28px 30px;position:relative}
 
 .controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; }
 .control-row { display: flex; align-items: center; gap: 12px; }
 .control-row label { font-size: 13px; color: var(--txt-mut); width: 170px; flex-shrink: 0; font-family:'Segoe UI',sans-serif; text-transform:none; }
-input[type="range"] { flex: 1; accent-color: var(--verde); height: 4px; }
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, var(--verde) 0%, var(--verde) var(--val, 50%), rgba(255,255,255,.15) var(--val, 50%), rgba(255,255,255,.15) 100%);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--verde);
+  box-shadow: 0 0 0 4px var(--verde-glow);
+  cursor: pointer;
+  border: none;
+}
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--verde);
+  box-shadow: 0 0 0 4px var(--verde-glow);
+  cursor: pointer;
+  border: none;
+}
+input[type="range"]::-moz-range-track {
+  background: transparent;
+}
 .control-row span { font-size: 14px; font-weight: 500; min-width: 56px; text-align: right; color:var(--txt); }
 
 .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 22px; }
@@ -179,22 +211,22 @@ footer a:hover{color:var(--verde)}
           </marker>
         </defs>
 
-        <rect x="20" y="100" width="130" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <rect x="20" y="100" width="130" height="56" rx="8" fill="#0C120C" stroke="var(--linha)"/>
         <text x="85" y="128" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Rede</text>
 
-        <rect x="275" y="100" width="150" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <rect x="275" y="100" width="150" height="56" rx="8" fill="#0C120C" stroke="var(--linha)"/>
         <text x="350" y="120" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Medição</text>
         <text id="med-val" x="350" y="140" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="var(--txt)">-20 kW</text>
 
-        <rect x="520" y="30" width="140" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <rect x="520" y="30" width="140" height="56" rx="8" fill="#0C120C" stroke="var(--linha)"/>
         <text x="590" y="50" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Carga</text>
         <text id="carga-val" x="590" y="70" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--txt-mut)">60 kW</text>
 
-        <rect x="520" y="170" width="140" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <rect x="520" y="170" width="140" height="56" rx="8" fill="#0C120C" stroke="var(--linha)"/>
         <text x="590" y="190" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Usina</text>
         <text id="usina-val" x="590" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--txt-mut)">40 kW</text>
 
-        <rect x="275" y="270" width="150" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <rect x="275" y="270" width="150" height="56" rx="8" fill="#0C120C" stroke="var(--linha)"/>
         <text x="350" y="298" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">PCC</text>
 
         <line id="rede-med" x1="150" y1="128" x2="275" y2="128" stroke="#2a78d6" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
@@ -226,6 +258,8 @@ footer a:hover{color:var(--verde)}
       <button id="export-btn" type="button" style="margin-top:16px;background:transparent;color:var(--verde);border:1px solid var(--verde);padding:10px 20px;border-radius:6px;font-family:'Segoe UI',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px">
         <span aria-hidden="true">⬇</span> Exportar imagem deste cenário
       </button>
+
+      <img src="img/hacon-logo.png" alt="HACON" style="position:absolute;bottom:16px;right:20px;height:22px;width:auto;opacity:.6">
     </div>
 
     <div class="explicacao">
@@ -318,6 +352,13 @@ function updateReadouts(){
   document.getElementById('setpoint-out').textContent = setpoint + ' kW';
 }
 
+function updateSliderFill(input){
+  const min = Number(input.min) || 0;
+  const max = Number(input.max) || 100;
+  const pct = ((Number(input.value) - min) / (max - min)) * 100;
+  input.style.setProperty('--val', pct + '%');
+}
+
 function tick(){
   const geraAlvo = Math.min(geracaoDisp, carga + setpoint);
   geraAplicadaAtual += (geraAlvo - geraAplicadaAtual) * 0.25;
@@ -393,10 +434,11 @@ function tick(){
   }
 }
 
-document.getElementById('carga').addEventListener('input', e => { carga = Number(e.target.value); updateReadouts(); });
-document.getElementById('geracao').addEventListener('input', e => { geracaoDisp = Number(e.target.value); updateReadouts(); });
-document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); });
+document.getElementById('carga').addEventListener('input', e => { carga = Number(e.target.value); updateReadouts(); updateSliderFill(e.target); });
+document.getElementById('geracao').addEventListener('input', e => { geracaoDisp = Number(e.target.value); updateReadouts(); updateSliderFill(e.target); });
+document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); updateSliderFill(e.target); });
 
+document.querySelectorAll('input[type="range"]').forEach(updateSliderFill);
 updateReadouts();
 setInterval(tick, 150);
 </script>
