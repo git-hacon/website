@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador Grid Zero — HACON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f0a;
+    --card: #141a14;
+    --verde: #7DD321;
+    --text-primary: #ffffff;
+    --text-secondary: #9aa39a;
+    --text-muted: #6b756b;
+    --border: #2a2f2a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 32px 20px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    margin: 0 0 6px;
+  }
+  p.sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 28px; }
+  .controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+  .control-row { display: flex; align-items: center; gap: 12px; }
+  .control-row label { font-size: 13px; color: var(--text-secondary); width: 170px; flex-shrink: 0; }
+  input[type="range"] {
+    flex: 1;
+    accent-color: var(--verde);
+    height: 4px;
+  }
+  .control-row span { font-size: 14px; font-weight: 500; min-width: 56px; text-align: right; }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
+  .stat-card { background: var(--card); border-radius: 10px; padding: 16px; border: 1px solid var(--border); }
+  .stat-card p.label { font-size: 12px; color: var(--text-muted); margin: 0 0 4px; }
+  .stat-card p.val { font-size: 22px; font-weight: 500; margin: 0; }
+  svg { display: block; margin-bottom: 20px; }
+  .chart-wrap { position: relative; width: 100%; height: 240px; margin-bottom: 12px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-secondary); }
+  .legend span { display: flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .dash { width: 14px; height: 2px; display: inline-block; }
+  footer { margin-top: 32px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 16px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Simulador de controle de exportação</h1>
+  <p class="sub">Ajuste carga, geração disponível e Limite de Potência Injetável (LPI) e veja o efeito no fluxo de potência no PCC — HACON, Curso Grid Zero na Prática</p>
+
+  <div class="controls">
+    <div class="control-row">
+      <label for="carga">Carga (kW)</label>
+      <input type="range" id="carga" min="0" max="150" value="60" step="1">
+      <span id="carga-out">60 kW</span>
+    </div>
+    <div class="control-row">
+      <label for="geracao">Geração disponível (kW)</label>
+      <input type="range" id="geracao" min="0" max="150" value="40" step="1">
+      <span id="geracao-out">40 kW</span>
+    </div>
+    <div class="control-row">
+      <label for="setpoint">Limite de Potência Injetável (LPI) (kW)</label>
+      <input type="range" id="setpoint" min="0" max="100" value="0" step="1">
+      <span id="setpoint-out">0 kW</span>
+    </div>
+  </div>
+
+  <svg width="100%" viewBox="0 0 680 340" role="img" style="margin-bottom:12px">
+    <title>Diagrama de fluxo de potência com valores em cada ponto</title>
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"/>
+      </marker>
+    </defs>
+
+    <rect x="20" y="100" width="130" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="85" y="128" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Rede</text>
+
+    <rect x="275" y="100" width="150" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="350" y="120" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Medição</text>
+    <text id="med-val" x="350" y="140" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="var(--text-primary)">-20 kW</text>
+
+    <rect x="520" y="30" width="140" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="590" y="50" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Carga</text>
+    <text id="carga-val" x="590" y="70" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--text-secondary)">60 kW</text>
+
+    <rect x="520" y="170" width="140" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="590" y="190" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Usina</text>
+    <text id="usina-val" x="590" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--text-secondary)">40 kW</text>
+
+    <rect x="275" y="270" width="150" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="350" y="298" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">PCC</text>
+
+    <line id="rede-med" x1="150" y1="128" x2="275" y2="128" stroke="#2a78d6" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+    <text id="rede-med-label" x="212" y="112" text-anchor="middle" font-size="12" fill="var(--text-secondary)">20 kW importados</text>
+
+    <path id="trunk-lower" d="M520 198 L460 198 L460 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6"/>
+    <path id="med-branch" d="M460 128 L427 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+    <path id="trunk-upper" d="M460 128 L460 58 L518 58" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+    <text id="carga-flow-label" x="490" y="45" text-anchor="middle" font-size="12" fill="#9aa39a" opacity="0">20 kW da rede</text>
+
+    <line x1="350" y1="156" x2="350" y2="268" stroke="#378ADD" stroke-width="1.5"/>
+    <path d="M425 298 L590 298 L590 228" fill="none" stroke="#378ADD" stroke-width="1.5"/>
+  </svg>
+
+  <div id="cond-banner" style="text-align:center;font-size:14px;font-weight:500;margin-bottom:20px;padding:8px;border-radius:8px;background:var(--card)">Importando 20 kW da rede</div>
+
+  <div class="chart-wrap">
+    <canvas id="chart" role="img" aria-label="Gráfico de carga, geração aplicada e fluxo no PCC ao longo do tempo, reagindo aos controles"></canvas>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:#eb6834"></span>Carga</span>
+    <span><span class="dot" style="background:#1baf7a"></span>Geração aplicada</span>
+    <span><span class="dot" style="background:#2a78d6"></span>PCC</span>
+    <span><span class="dash" style="background:#898781"></span>LPI</span>
+  </div>
+
+  <footer>HACON — Hoeschl Automação e Controle Ltda. Simulador educativo do curso Grid Zero na Prática.</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const N = 40;
+let labels = Array.from({length:N}, (_,i)=>i);
+let cargaHist = Array(N).fill(60);
+let geraHist = Array(N).fill(40);
+let pccHist = Array(N).fill(-20);
+let setHist = Array(N).fill(0);
+
+let carga = 60, geracaoDisp = 40, setpoint = 0;
+let geraAplicadaAtual = 40;
+
+const ctx = document.getElementById('chart');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { labels, datasets: [
+    { label:'Carga', data: cargaHist, borderColor:'#eb6834', borderWidth:2, pointRadius:0, tension:0.3 },
+    { label:'Geração aplicada', data: geraHist, borderColor:'#1baf7a', borderWidth:2, pointRadius:0, tension:0.3 },
+    { label:'PCC', data: pccHist, borderColor:'#2a78d6', borderWidth:2, pointRadius:0, tension:0.3 },
+    { label:'LPI', data: setHist, borderColor:'#898781', borderWidth:1.5, borderDash:[4,4], pointRadius:0 }
+  ]},
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    animation:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ display:false },
+      y:{ ticks:{ color:'#9aa39a', font:{size:11} }, grid:{ color:'#2a2f2a' } }
+    }
+  }
+});
+
+function updateReadouts(){
+  document.getElementById('carga-out').textContent = carga + ' kW';
+  document.getElementById('geracao-out').textContent = geracaoDisp + ' kW';
+  document.getElementById('setpoint-out').textContent = setpoint + ' kW';
+}
+
+function tick(){
+  const geraAlvo = Math.min(geracaoDisp, carga + setpoint);
+  geraAplicadaAtual += (geraAlvo - geraAplicadaAtual) * 0.25;
+  const pcc = geraAplicadaAtual - carga;
+
+  cargaHist.shift(); cargaHist.push(carga);
+  geraHist.shift(); geraHist.push(geraAplicadaAtual);
+  pccHist.shift(); pccHist.push(pcc);
+  setHist.shift(); setHist.push(setpoint);
+
+  chart.data.datasets[0].data = cargaHist;
+  chart.data.datasets[1].data = geraHist;
+  chart.data.datasets[2].data = pccHist;
+  chart.data.datasets[3].data = setHist;
+  chart.update('none');
+
+  document.getElementById('carga-val').textContent = carga + ' kW';
+  document.getElementById('usina-val').textContent = Math.round(geraAplicadaAtual) + ' kW';
+
+  const medVal = document.getElementById('med-val');
+  const banner = document.getElementById('cond-banner');
+  const rmLine = document.getElementById('rede-med');
+  const rmLabel = document.getElementById('rede-med-label');
+  const medBranch = document.getElementById('med-branch');
+  const trunkUpper = document.getElementById('trunk-upper');
+  const cargaFlowLabel = document.getElementById('carga-flow-label');
+  const absPcc = Math.round(Math.abs(pcc));
+
+  if (Math.abs(pcc) < 2) {
+    medVal.textContent = '~0 kW';
+    medVal.setAttribute('fill', '#898781');
+    banner.textContent = 'Controlado — carga suprida integralmente pela usina';
+    banner.style.color = '#9aa39a';
+    rmLine.setAttribute('stroke', '#898781');
+    rmLine.setAttribute('x1','150'); rmLine.setAttribute('x2','275');
+    rmLine.setAttribute('marker-end','url(#ah)');
+    rmLabel.textContent = '~0 kW';
+    medBranch.setAttribute('d', 'M460 128 L427 128');
+    medBranch.setAttribute('stroke', '#898781');
+    medBranch.setAttribute('marker-end','url(#ah)');
+    trunkUpper.setAttribute('stroke', '#1baf7a');
+    cargaFlowLabel.setAttribute('opacity', '0');
+  } else if (pcc > 0) {
+    medVal.textContent = '+' + Math.round(pcc) + ' kW';
+    medVal.setAttribute('fill', '#1baf7a');
+    banner.textContent = 'Excesso de geração: ' + absPcc + ' kW vão para a carga e para a rede';
+    banner.style.color = '#1baf7a';
+    rmLine.setAttribute('stroke', '#1baf7a');
+    rmLine.setAttribute('x1','275'); rmLine.setAttribute('x2','150');
+    rmLine.setAttribute('marker-end','url(#ah)');
+    rmLabel.textContent = absPcc + ' kW exportados';
+    medBranch.setAttribute('d', 'M460 128 L427 128');
+    medBranch.setAttribute('stroke', '#1baf7a');
+    medBranch.setAttribute('marker-end','url(#ah)');
+    trunkUpper.setAttribute('stroke', '#1baf7a');
+    cargaFlowLabel.setAttribute('opacity', '0');
+  } else {
+    medVal.textContent = '' + Math.round(pcc) + ' kW';
+    medVal.setAttribute('fill', '#e34948');
+    banner.textContent = 'Geração insuficiente: carga suprida pela usina (' + Math.round(geraAplicadaAtual) + ' kW) e pela rede (' + absPcc + ' kW)';
+    banner.style.color = '#e34948';
+    rmLine.setAttribute('stroke', '#e34948');
+    rmLine.setAttribute('x1','150'); rmLine.setAttribute('x2','275');
+    rmLine.setAttribute('marker-end','url(#ah)');
+    rmLabel.textContent = absPcc + ' kW importados';
+    medBranch.setAttribute('d', 'M427 128 L460 128');
+    medBranch.setAttribute('stroke', '#eda100');
+    medBranch.setAttribute('marker-end','url(#ah)');
+    trunkUpper.setAttribute('stroke', '#eda100');
+    cargaFlowLabel.setAttribute('opacity', '1');
+    cargaFlowLabel.setAttribute('fill', '#eda100');
+    cargaFlowLabel.textContent = absPcc + ' kW da rede';
+  }
+}
+
+document.getElementById('carga').addEventListener('input', e => { carga = Number(e.target.value); updateReadouts(); });
+document.getElementById('geracao').addEventListener('input', e => { geracaoDisp = Number(e.target.value); updateReadouts(); });
+document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); });
+
+updateReadouts();
+setInterval(tick, 150);
+</script>
+</body>
+</html>
