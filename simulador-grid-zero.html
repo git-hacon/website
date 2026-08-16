@@ -203,7 +203,8 @@ footer a:hover{color:var(--verde)}
         </div>
       </div>
 
-      <svg width="100%" viewBox="0 0 680 340" role="img" style="margin-bottom:12px">
+      <div style="position:relative">
+        <svg width="100%" viewBox="0 0 680 340" role="img" style="margin-bottom:12px">
         <title>Diagrama de fluxo de potência com valores em cada ponto</title>
         <defs>
           <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
@@ -239,9 +240,9 @@ footer a:hover{color:var(--verde)}
 
         <line x1="350" y1="156" x2="350" y2="268" stroke="#378ADD" stroke-width="1.5"/>
         <path d="M425 298 L590 298 L590 228" fill="none" stroke="#378ADD" stroke-width="1.5"/>
-
-        <image href="img/hacon-logo.png" x="20" y="292" width="120" height="28" opacity="0.55" preserveAspectRatio="xMinYMid meet"/>
       </svg>
+        <img src="img/hacon-logo.png" alt="HACON" style="position:absolute;left:2.94%;top:85.9%;width:17.6%;height:auto;opacity:.55">
+      </div>
 
       <div id="cond-banner" style="text-align:center;font-size:14px;font-weight:500;margin-bottom:22px;padding:10px;border-radius:8px;background:var(--bg-2);border:1px solid var(--linha);text-transform:none;font-family:'Segoe UI',sans-serif">Importando 20 kW da rede</div>
 
@@ -451,10 +452,20 @@ document.getElementById('export-btn').addEventListener('click', function () {
   btn.innerHTML = 'Gerando imagem...';
   btn.disabled = true;
 
-  html2canvas(document.getElementById('sim-card'), {
-    backgroundColor: '#131c13',
-    scale: 2,
-    useCORS: true
+  const images = Array.from(document.querySelectorAll('#sim-card img'));
+  const waitForImages = Promise.all(images.map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
+  }));
+
+  waitForImages.then(function () {
+    return html2canvas(document.getElementById('sim-card'), {
+      backgroundColor: '#131c13',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      imageTimeout: 3000
+    });
   }).then(function (canvas) {
     const link = document.createElement('a');
     const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
