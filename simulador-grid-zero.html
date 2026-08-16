@@ -151,7 +151,7 @@ footer a:hover{color:var(--verde)}
 
 <section class="simulador">
   <div class="wrap">
-    <div class="sim-card">
+    <div class="sim-card" id="sim-card">
 
       <div class="controls">
         <div class="control-row">
@@ -222,6 +222,10 @@ footer a:hover{color:var(--verde)}
       </div>
 
       <p class="sim-note">Simulador educativo do curso Grid Zero na Prática. Os valores exibidos são ilustrativos e não substituem o dimensionamento técnico de projeto.</p>
+
+      <button id="export-btn" type="button" style="margin-top:16px;background:transparent;color:var(--verde);border:1px solid var(--verde);padding:10px 20px;border-radius:6px;font-family:'Segoe UI',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px">
+        <span aria-hidden="true">⬇</span> Exportar imagem deste cenário
+      </button>
     </div>
 
     <div class="explicacao">
@@ -253,7 +257,7 @@ footer a:hover{color:var(--verde)}
         <p style="margin:6px 0 0">Deixe Carga em 60, Geração em 100 e LPI em 0. Veja que a "Geração aplicada" trava em 60 kW — o controlador segura a usina exatamente no que a carga consome, mesmo ela tendo capacidade de gerar mais.</p>
       </div>
       <div class="exemplo">
-        <b>Exportação limitada</b>
+        <b>Exportação limitada (como o caso real do Caso 2)</b>
         <p style="margin:6px 0 0">Carga em 60, Geração em 200, LPI em 95. A geração aplicada trava em 155 kW (60 de carga + 95 de limite) — o PCC fica exatamente em +95 kW de exportação, mesmo a usina tendo 200 kW disponíveis. É esse mecanismo que permite exportar até um limite definido pela distribuidora, sem passar dele.</p>
       </div>
       <div class="exemplo">
@@ -395,6 +399,34 @@ document.getElementById('setpoint').addEventListener('input', e => { setpoint = 
 
 updateReadouts();
 setInterval(tick, 150);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+document.getElementById('export-btn').addEventListener('click', function () {
+  const btn = this;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Gerando imagem...';
+  btn.disabled = true;
+
+  html2canvas(document.getElementById('sim-card'), {
+    backgroundColor: '#131c13',
+    scale: 2,
+    useCORS: true
+  }).then(function (canvas) {
+    const link = document.createElement('a');
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    link.download = 'grid-zero-simulador-' + timestamp + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }).catch(function (err) {
+    console.error('Erro ao exportar imagem:', err);
+    btn.innerHTML = 'Erro — tente novamente';
+    setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2500);
+  });
+});
 </script>
 </body>
 </html>
