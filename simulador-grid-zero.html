@@ -15,7 +15,7 @@
 
 <!-- ===== SEO PRIMÁRIO ===== -->
 <title>Simulador Grid Zero — Controle de Exportação em Tempo Real | HACON</title>
-<meta name="description" content="Simule o controle de exportação zero de uma usina solar: ajuste carga, geração e setpoint e veja o fluxo de potência reagir em tempo real. Ferramenta educativa HACON.">
+<meta name="description" content="Simule o controle de exportação zero de uma usina solar: ajuste carga, geração e Limite de Potência Injetável (LPI) e veja o fluxo de potência reagir em tempo real. Ferramenta educativa HACON.">
 <meta name="keywords" content="simulador grid zero, zero export controller, controle de exportação de energia, PPC-GD, SCRPI, geração distribuída">
 <meta name="author" content="HACON — Hoeschl Automação e Controle Ltda">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -25,12 +25,12 @@
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="HACON">
 <meta property="og:title" content="Simulador Grid Zero — Controle de Exportação em Tempo Real | HACON">
-<meta property="og:description" content="Ajuste carga, geração disponível e setpoint e veja o efeito no fluxo de potência no PCC.">
+<meta property="og:description" content="Ajuste carga, geração disponível e LPI e veja o efeito no fluxo de potência no PCC.">
 <meta property="og:url" content="https://hacon.tech/simulador-grid-zero.html">
 <meta property="og:image" content="https://hacon.tech/img/controlador.webp">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Simulador Grid Zero — Controle de Exportação em Tempo Real | HACON">
-<meta name="twitter:description" content="Ajuste carga, geração disponível e setpoint e veja o efeito no fluxo de potência no PCC.">
+<meta name="twitter:description" content="Ajuste carga, geração disponível e LPI e veja o efeito no fluxo de potência no PCC.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
@@ -133,7 +133,7 @@ footer a:hover{color:var(--verde)}
   <div class="wrap">
     <span class="eyebrow">Ferramenta Educativa · Curso Grid Zero na Prática</span>
     <h1>Simulador de <span class="verde">controle de exportação</span></h1>
-    <p class="lead">Ajuste carga, geração disponível e setpoint e veja o efeito no fluxo de potência no PCC em tempo real.</p>
+    <p class="lead">Ajuste carga, geração disponível e Limite de Potência Injetável (LPI) e veja o efeito no fluxo de potência no PCC em tempo real.</p>
   </div>
 </section>
 
@@ -153,7 +153,7 @@ footer a:hover{color:var(--verde)}
           <span id="geracao-out">40 kW</span>
         </div>
         <div class="control-row">
-          <label for="setpoint">Setpoint (kW)</label>
+          <label for="setpoint">Limite de Potência Injetável (LPI) (kW)</label>
           <input type="range" id="setpoint" min="0" max="100" value="0" step="1">
           <span id="setpoint-out">0 kW</span>
         </div>
@@ -206,7 +206,7 @@ footer a:hover{color:var(--verde)}
         <span><span class="dot" style="background:#eb6834"></span>Carga</span>
         <span><span class="dot" style="background:#1baf7a"></span>Geração aplicada</span>
         <span><span class="dot" style="background:#2a78d6"></span>PCC</span>
-        <span><span class="dash" style="background:#9fb098"></span>Setpoint</span>
+        <span><span class="dash" style="background:#9fb098"></span>LPI</span>
       </div>
 
       <p class="sim-note">Simulador educativo do curso Grid Zero na Prática. Os valores exibidos são ilustrativos e não substituem o dimensionamento técnico de projeto.</p>
@@ -243,7 +243,7 @@ const chart = new Chart(ctx, {
     { label:'Carga', data: cargaHist, borderColor:'#eb6834', borderWidth:2, pointRadius:0, tension:0.3 },
     { label:'Geração aplicada', data: geraHist, borderColor:'#1baf7a', borderWidth:2, pointRadius:0, tension:0.3 },
     { label:'PCC', data: pccHist, borderColor:'#2a78d6', borderWidth:2, pointRadius:0, tension:0.3 },
-    { label:'Setpoint', data: setHist, borderColor:'#9fb098', borderWidth:1.5, borderDash:[4,4], pointRadius:0 }
+    { label:'LPI', data: setHist, borderColor:'#9fb098', borderWidth:1.5, borderDash:[4,4], pointRadius:0 }
   ]},
   options: {
     responsive:true, maintainAspectRatio:false,
