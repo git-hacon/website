@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-QW3BS75EMP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-QW3BS75EMP');
+</script>
+
+<!-- ===== SEO PRIMÁRIO ===== -->
+<title>Simulador Grid Zero — Controle de Exportação em Tempo Real | HACON</title>
+<meta name="description" content="Simule o controle de exportação zero de uma usina solar: ajuste carga, geração e setpoint e veja o fluxo de potência reagir em tempo real. Ferramenta educativa HACON.">
+<meta name="keywords" content="simulador grid zero, zero export controller, controle de exportação de energia, PPC-GD, SCRPI, geração distribuída">
+<meta name="author" content="HACON — Hoeschl Automação e Controle Ltda">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://hacon.tech/simulador-grid-zero.html">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="HACON">
+<meta property="og:title" content="Simulador Grid Zero — Controle de Exportação em Tempo Real | HACON">
+<meta property="og:description" content="Ajuste carga, geração disponível e setpoint e veja o efeito no fluxo de potência no PCC.">
+<meta property="og:url" content="https://hacon.tech/simulador-grid-zero.html">
+<meta property="og:image" content="https://hacon.tech/img/controlador.webp">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Simulador Grid Zero — Controle de Exportação em Tempo Real | HACON">
+<meta name="twitter:description" content="Ajuste carga, geração disponível e setpoint e veja o efeito no fluxo de potência no PCC.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --verde:#7DD321;
+  --verde-esc:#5fa717;
+  --verde-glow:rgba(125,211,33,.35);
+  --bg:#0a0f0a;
+  --bg-2:#0f1710;
+  --card:#131c13;
+  --linha:rgba(125,211,33,.14);
+  --txt:#eaf3e6;
+  --txt-mut:#9fb098;
+  --branco:#ffffff;
+  --max:1160px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,'Helvetica Neue',Arial,sans-serif;
+  background:var(--bg);color:var(--txt);line-height:1.6;overflow-x:hidden;
+}
+h1,h2,h3,.cond{font-family:'Barlow Condensed','Arial Narrow',sans-serif;font-weight:700;letter-spacing:.3px;text-transform:uppercase}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 24px}
+.verde{color:var(--verde)}
+
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,15,10,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--linha)}
+.nav{display:flex;align-items:center;justify-content:space-between;height:66px}
+.logo img{height:34px;width:auto;display:block}
+.nav-links{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.nav-links a{font-size:13px;font-weight:600;color:var(--txt-mut);text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}
+.nav-links a:hover{color:var(--verde)}
+.nav-links a.btn{color:#06210a}
+.nav-links a.btn:hover{color:#06210a}
+.btn{display:inline-block;background:var(--verde);color:#06210a;font-weight:700;padding:12px 24px;border-radius:6px;text-transform:uppercase;letter-spacing:.6px;font-size:14px;transition:transform .15s,box-shadow .15s;cursor:pointer;border:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--verde-glow)}
+
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:700;color:var(--verde);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:16px;border:1px solid var(--linha);padding:6px 14px;border-radius:40px;background:rgba(125,211,33,.06)}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--verde);box-shadow:0 0 10px var(--verde)}
+
+.hero{padding:150px 0 40px;background:radial-gradient(120% 80% at 50% 100%, var(--verde-glow) 0%, transparent 55%),linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%)}
+.hero h1{font-size:clamp(28px,4vw,44px);line-height:1.05;margin-bottom:16px;max-width:820px}
+.hero p.lead{font-size:16px;color:var(--txt-mut);max-width:680px;font-family:'Segoe UI',sans-serif;text-transform:none;margin-bottom:0}
+
+section.simulador{padding:20px 0 70px}
+.sim-card{background:var(--card);border:1px solid var(--linha);border-radius:14px;padding:28px 30px}
+
+.controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; }
+.control-row { display: flex; align-items: center; gap: 12px; }
+.control-row label { font-size: 13px; color: var(--txt-mut); width: 170px; flex-shrink: 0; font-family:'Segoe UI',sans-serif; text-transform:none; }
+input[type="range"] { flex: 1; accent-color: var(--verde); height: 4px; }
+.control-row span { font-size: 14px; font-weight: 500; min-width: 56px; text-align: right; color:var(--txt); }
+
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 22px; }
+.stat-card { background: var(--bg-2); border-radius: 10px; padding: 16px; border: 1px solid var(--linha); }
+.stat-card p.label { font-size: 12px; color: var(--txt-mut); margin: 0 0 4px; text-transform:none; font-family:'Segoe UI',sans-serif; }
+.stat-card p.val { font-size: 22px; font-weight: 500; margin: 0; }
+
+svg { display: block; margin-bottom: 20px; }
+.chart-wrap { position: relative; width: 100%; height: 240px; margin-bottom: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--txt-mut); font-family:'Segoe UI',sans-serif; }
+.legend span { display: flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+.dash { width: 14px; height: 2px; display: inline-block; }
+
+.sim-note{margin-top:22px;font-size:13px;color:var(--txt-mut);font-family:'Segoe UI',sans-serif;border-top:1px solid var(--linha);padding-top:16px;text-transform:none}
+
+footer{background:#070b07;border-top:1px solid var(--linha);padding:36px 0}
+footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;align-items:center}
+footer a{color:var(--txt-mut);font-size:13px;font-family:'Segoe UI',sans-serif}
+footer a:hover{color:var(--verde)}
+
+@media (max-width:900px){
+  .nav-links{display:none}
+  .stats{grid-template-columns:1fr}
+  .control-row label{width:130px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="https://hacon.tech" class="logo" aria-label="HACON — início"><img src="img/hacon-logo.png" alt="HACON — Hoeschl Automação e Controle" width="140" height="32"></a>
+    <nav class="nav-links">
+      <a href="https://hacon.tech">Site Principal</a>
+      <a href="https://hacon.tech/controlador-grid-zero.html">O Controlador</a>
+      <a href="https://hacon.tech/faq.html">FAQ</a>
+      <a href="https://hacon.tech/blog">Blog</a>
+      <a href="#contato" class="btn">Falar com Especialista</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Ferramenta Educativa · Curso Grid Zero na Prática</span>
+    <h1>Simulador de <span class="verde">controle de exportação</span></h1>
+    <p class="lead">Ajuste carga, geração disponível e setpoint e veja o efeito no fluxo de potência no PCC em tempo real.</p>
+  </div>
+</section>
+
+<section class="simulador">
+  <div class="wrap">
+    <div class="sim-card">
+
+      <div class="controls">
+        <div class="control-row">
+          <label for="carga">Carga (kW)</label>
+          <input type="range" id="carga" min="0" max="150" value="60" step="1">
+          <span id="carga-out">60 kW</span>
+        </div>
+        <div class="control-row">
+          <label for="geracao">Geração disponível (kW)</label>
+          <input type="range" id="geracao" min="0" max="150" value="40" step="1">
+          <span id="geracao-out">40 kW</span>
+        </div>
+        <div class="control-row">
+          <label for="setpoint">Setpoint (kW)</label>
+          <input type="range" id="setpoint" min="0" max="100" value="0" step="1">
+          <span id="setpoint-out">0 kW</span>
+        </div>
+      </div>
+
+      <svg width="100%" viewBox="0 0 680 340" role="img" style="margin-bottom:12px">
+        <title>Diagrama de fluxo de potência com valores em cada ponto</title>
+        <defs>
+          <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"/>
+          </marker>
+        </defs>
+
+        <rect x="20" y="100" width="130" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <text x="85" y="128" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Rede</text>
+
+        <rect x="275" y="100" width="150" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <text x="350" y="120" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Medição</text>
+        <text id="med-val" x="350" y="140" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="var(--txt)">-20 kW</text>
+
+        <rect x="520" y="30" width="140" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <text x="590" y="50" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Carga</text>
+        <text id="carga-val" x="590" y="70" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--txt-mut)">60 kW</text>
+
+        <rect x="520" y="170" width="140" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <text x="590" y="190" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">Usina</text>
+        <text id="usina-val" x="590" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--txt-mut)">40 kW</text>
+
+        <rect x="275" y="270" width="150" height="56" rx="8" fill="var(--bg-2)" stroke="var(--linha)"/>
+        <text x="350" y="298" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--txt)" style="text-transform:none">PCC</text>
+
+        <line id="rede-med" x1="150" y1="128" x2="275" y2="128" stroke="#2a78d6" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+        <text id="rede-med-label" x="212" y="112" text-anchor="middle" font-size="12" fill="var(--txt-mut)" style="text-transform:none">20 kW importados</text>
+
+        <path id="trunk-lower" d="M520 198 L460 198 L460 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6"/>
+        <path id="med-branch" d="M460 128 L427 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+        <path id="trunk-upper" d="M460 128 L460 58 L518 58" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+        <text id="carga-flow-label" x="490" y="45" text-anchor="middle" font-size="12" fill="var(--txt-mut)" opacity="0" style="text-transform:none">20 kW da rede</text>
+
+        <line x1="350" y1="156" x2="350" y2="268" stroke="#378ADD" stroke-width="1.5"/>
+        <path d="M425 298 L590 298 L590 228" fill="none" stroke="#378ADD" stroke-width="1.5"/>
+      </svg>
+
+      <div id="cond-banner" style="text-align:center;font-size:14px;font-weight:500;margin-bottom:22px;padding:10px;border-radius:8px;background:var(--bg-2);border:1px solid var(--linha);text-transform:none;font-family:'Segoe UI',sans-serif">Importando 20 kW da rede</div>
+
+      <div class="chart-wrap">
+        <canvas id="chart" role="img" aria-label="Gráfico de carga, geração aplicada e fluxo no PCC ao longo do tempo, reagindo aos controles"></canvas>
+      </div>
+      <div class="legend">
+        <span><span class="dot" style="background:#eb6834"></span>Carga</span>
+        <span><span class="dot" style="background:#1baf7a"></span>Geração aplicada</span>
+        <span><span class="dot" style="background:#2a78d6"></span>PCC</span>
+        <span><span class="dash" style="background:#9fb098"></span>Setpoint</span>
+      </div>
+
+      <p class="sim-note">Simulador educativo do curso Grid Zero na Prática. Os valores exibidos são ilustrativos e não substituem o dimensionamento técnico de projeto.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="contato">
+  <div class="wrap">
+    <span>© 2026 HACON — Hoeschl Automação e Controle Ltda.</span>
+    <a href="https://hacon.tech">hacon.tech</a>
+    <a href="https://hacon.tech/blog">Blog</a>
+    <a href="https://hacon.tech/autor.html">Sobre o Autor</a>
+    <a href="https://hacon.tech/politica-de-privacidade.html">Política de Privacidade</a>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const N = 40;
+let labels = Array.from({length:N}, (_,i)=>i);
+let cargaHist = Array(N).fill(60);
+let geraHist = Array(N).fill(40);
+let pccHist = Array(N).fill(-20);
+let setHist = Array(N).fill(0);
+
+let carga = 60, geracaoDisp = 40, setpoint = 0;
+let geraAplicadaAtual = 40;
+
+const ctx = document.getElementById('chart');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: { labels, datasets: [
+    { label:'Carga', data: cargaHist, borderColor:'#eb6834', borderWidth:2, pointRadius:0, tension:0.3 },
+    { label:'Geração aplicada', data: geraHist, borderColor:'#1baf7a', borderWidth:2, pointRadius:0, tension:0.3 },
+    { label:'PCC', data: pccHist, borderColor:'#2a78d6', borderWidth:2, pointRadius:0, tension:0.3 },
+    { label:'Setpoint', data: setHist, borderColor:'#9fb098', borderWidth:1.5, borderDash:[4,4], pointRadius:0 }
+  ]},
+  options: {
+    responsive:true, maintainAspectRatio:false,
+    animation:false,
+    plugins:{ legend:{display:false} },
+    scales:{
+      x:{ display:false },
+      y:{ ticks:{ color:'#9fb098', font:{size:11} }, grid:{ color:'rgba(125,211,33,.10)' } }
+    }
+  }
+});
+
+function updateReadouts(){
+  document.getElementById('carga-out').textContent = carga + ' kW';
+  document.getElementById('geracao-out').textContent = geracaoDisp + ' kW';
+  document.getElementById('setpoint-out').textContent = setpoint + ' kW';
+}
+
+function tick(){
+  const geraAlvo = Math.min(geracaoDisp, carga + setpoint);
+  geraAplicadaAtual += (geraAlvo - geraAplicadaAtual) * 0.25;
+  const pcc = geraAplicadaAtual - carga;
+
+  cargaHist.shift(); cargaHist.push(carga);
+  geraHist.shift(); geraHist.push(geraAplicadaAtual);
+  pccHist.shift(); pccHist.push(pcc);
+  setHist.shift(); setHist.push(setpoint);
+
+  chart.data.datasets[0].data = cargaHist;
+  chart.data.datasets[1].data = geraHist;
+  chart.data.datasets[2].data = pccHist;
+  chart.data.datasets[3].data = setHist;
+  chart.update('none');
+
+  document.getElementById('carga-val').textContent = carga + ' kW';
+  document.getElementById('usina-val').textContent = Math.round(geraAplicadaAtual) + ' kW';
+
+  const medVal = document.getElementById('med-val');
+  const banner = document.getElementById('cond-banner');
+  const rmLine = document.getElementById('rede-med');
+  const rmLabel = document.getElementById('rede-med-label');
+  const medBranch = document.getElementById('med-branch');
+  const trunkUpper = document.getElementById('trunk-upper');
+  const cargaFlowLabel = document.getElementById('carga-flow-label');
+  const absPcc = Math.round(Math.abs(pcc));
+
+  if (Math.abs(pcc) < 2) {
+    medVal.textContent = '~0 kW';
+    medVal.setAttribute('fill', '#9fb098');
+    banner.textContent = 'Controlado — carga suprida integralmente pela usina';
+    banner.style.color = '#9fb098';
+    rmLine.setAttribute('stroke', '#9fb098');
+    rmLine.setAttribute('x1','150'); rmLine.setAttribute('x2','275');
+    rmLine.setAttribute('marker-end','url(#ah)');
+    rmLabel.textContent = '~0 kW';
+    medBranch.setAttribute('d', 'M460 128 L427 128');
+    medBranch.setAttribute('stroke', '#9fb098');
+    medBranch.setAttribute('marker-end','url(#ah)');
+    trunkUpper.setAttribute('stroke', '#1baf7a');
+    cargaFlowLabel.setAttribute('opacity', '0');
+  } else if (pcc > 0) {
+    medVal.textContent = '+' + Math.round(pcc) + ' kW';
+    medVal.setAttribute('fill', '#1baf7a');
+    banner.textContent = 'Excesso de geração: ' + absPcc + ' kW vão para a carga e para a rede';
+    banner.style.color = '#1baf7a';
+    rmLine.setAttribute('stroke', '#1baf7a');
+    rmLine.setAttribute('x1','275'); rmLine.setAttribute('x2','150');
+    rmLine.setAttribute('marker-end','url(#ah)');
+    rmLabel.textContent = absPcc + ' kW exportados';
+    medBranch.setAttribute('d', 'M460 128 L427 128');
+    medBranch.setAttribute('stroke', '#1baf7a');
+    medBranch.setAttribute('marker-end','url(#ah)');
+    trunkUpper.setAttribute('stroke', '#1baf7a');
+    cargaFlowLabel.setAttribute('opacity', '0');
+  } else {
+    medVal.textContent = '' + Math.round(pcc) + ' kW';
+    medVal.setAttribute('fill', '#e34948');
+    banner.textContent = 'Geração insuficiente: carga suprida pela usina (' + Math.round(geraAplicadaAtual) + ' kW) e pela rede (' + absPcc + ' kW)';
+    banner.style.color = '#e34948';
+    rmLine.setAttribute('stroke', '#e34948');
+    rmLine.setAttribute('x1','150'); rmLine.setAttribute('x2','275');
+    rmLine.setAttribute('marker-end','url(#ah)');
+    rmLabel.textContent = absPcc + ' kW importados';
+    medBranch.setAttribute('d', 'M427 128 L460 128');
+    medBranch.setAttribute('stroke', '#eda100');
+    medBranch.setAttribute('marker-end','url(#ah)');
+    trunkUpper.setAttribute('stroke', '#eda100');
+    cargaFlowLabel.setAttribute('opacity', '1');
+    cargaFlowLabel.setAttribute('fill', '#eda100');
+    cargaFlowLabel.textContent = absPcc + ' kW da rede';
+  }
+}
+
+document.getElementById('carga').addEventListener('input', e => { carga = Number(e.target.value); updateReadouts(); });
+document.getElementById('geracao').addEventListener('input', e => { geracaoDisp = Number(e.target.value); updateReadouts(); });
+document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); });
+
+updateReadouts();
+setInterval(tick, 150);
+</script>
+</body>
+</html>
