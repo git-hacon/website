@@ -11,6 +11,7 @@
     --bg: #0a0f0a;
     --card: #141a14;
     --verde: #7DD321;
+    --verde-glow: rgba(125,211,33,.35);
     --text-primary: #ffffff;
     --text-secondary: #9aa39a;
     --text-muted: #6b756b;
@@ -32,162 +33,224 @@
     margin: 0 0 6px;
   }
   p.sub { color: var(--text-secondary); font-size: 14px; margin: 0 0 28px; }
-  .controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px; }
+
+  .sim-card { position: relative; }
+
+  .controls { display: flex; flex-direction: column; gap: 14px; margin-bottom: 22px; }
   .control-row { display: flex; align-items: center; gap: 12px; }
   .control-row label { font-size: 13px; color: var(--text-secondary); width: 170px; flex-shrink: 0; }
   input[type="range"] {
     flex: 1;
-    accent-color: var(--verde);
+    -webkit-appearance: none;
+    appearance: none;
     height: 4px;
+    border-radius: 2px;
+    background: linear-gradient(to right, var(--verde) 0%, var(--verde) var(--val, 50%), rgba(255,255,255,.15) var(--val, 50%), rgba(255,255,255,.15) 100%);
+    outline: none;
+    cursor: pointer;
   }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--verde);
+    box-shadow: 0 0 0 4px var(--verde-glow);
+    cursor: pointer;
+    border: none;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--verde);
+    box-shadow: 0 0 0 4px var(--verde-glow);
+    cursor: pointer;
+    border: none;
+  }
+  input[type="range"]::-moz-range-track { background: transparent; }
   .control-row span { font-size: 14px; font-weight: 500; min-width: 56px; text-align: right; }
+
   .stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
   .stat-card { background: var(--card); border-radius: 10px; padding: 16px; border: 1px solid var(--border); }
   .stat-card p.label { font-size: 12px; color: var(--text-muted); margin: 0 0 4px; }
   .stat-card p.val { font-size: 22px; font-weight: 500; margin: 0; }
   svg { display: block; margin-bottom: 20px; }
+  .logo-diagrama { position: absolute; left: 2.94%; top: 76.5%; width: 17.6%; height: auto; opacity: .55; }
   .chart-wrap { position: relative; width: 100%; height: 240px; margin-bottom: 12px; }
   .legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; color: var(--text-secondary); }
   .legend span { display: flex; align-items: center; gap: 6px; }
   .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
   .dash { width: 14px; height: 2px; display: inline-block; }
+  .sim-note { margin-top: 16px; font-size: 13px; color: var(--text-muted); }
+
+  .export-btn {
+    margin-top: 18px; background: transparent; color: var(--verde); border: 1px solid var(--verde);
+    padding: 10px 20px; border-radius: 6px; font-family: 'Poppins', sans-serif; font-size: 13px;
+    font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
+    transition: opacity .15s;
+  }
+  .export-btn:hover { opacity: .85; }
+
+  .explicacao { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 24px 26px; margin-top: 24px; }
+  .explicacao h2 { font-family: 'Barlow Condensed', sans-serif; font-size: 20px; margin: 0 0 14px; }
+  .explicacao h3 { font-size: 14px; color: var(--verde); margin: 18px 0 8px; font-weight: 600; }
+  .explicacao p, .explicacao li { font-size: 13.5px; color: var(--text-secondary); line-height: 1.65; }
+  .explicacao p { margin: 0 0 10px; }
+  .explicacao ul { margin: 0 0 10px 18px; }
+  .explicacao li { margin-bottom: 6px; }
+  .explicacao strong { color: var(--text-primary); font-weight: 600; }
+  .explicacao .exemplo { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-bottom: 10px; }
+  .explicacao .exemplo b { color: var(--verde); font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; font-size: 12px; letter-spacing: .4px; }
+  .cor-tag { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+
   footer { margin-top: 32px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 16px; }
-  .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; }
-  .card-top img { height: 28px; width: auto; display: block; }
-  .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
-  .print-btn {
-    background: var(--verde); color: #06210a; border: none; padding: 9px 18px;
-    border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
-    font-family: 'Poppins', sans-serif; transition: opacity .15s;
-  }
-  .print-btn:hover { opacity: .88; }
-  .print-btn.outline { background: transparent; color: var(--verde); border: 1.5px solid var(--verde); }
-  @media print {
-    .card-actions { display: none; }
-    body { padding: 0; }
-  }
 </style>
 </head>
 <body>
-<div class="wrap" id="capture-area">
-  <div class="card-top">
-    <img src="https://hacon.tech/img/hacon-logo.png" alt="HACON — Hoeschl Automação e Controle">
-    <div class="card-actions">
-      <button class="print-btn outline" id="btn-imprimir">Imprimir</button>
-      <button class="print-btn" id="btn-baixar-png">Baixar PNG</button>
-    </div>
-  </div>
+<div class="wrap">
   <h1>Simulador de controle de exportação</h1>
   <p class="sub">Ajuste carga, geração disponível e Limite de Potência Injetável (LPI) e veja o efeito no fluxo de potência no PCC — HACON, Curso Grid Zero na Prática</p>
 
-  <div class="controls">
-    <div class="control-row">
-      <label for="carga">Carga (kW)</label>
-      <input type="range" id="carga" min="0" max="150" value="60" step="1">
-      <span id="carga-out">60 kW</span>
-    </div>
-    <div class="control-row">
-      <label for="geracao">Geração disponível (kW)</label>
-      <input type="range" id="geracao" min="0" max="150" value="40" step="1">
-      <span id="geracao-out">40 kW</span>
-    </div>
-    <div class="control-row">
-      <label for="setpoint">Limite de Potência Injetável (LPI) (kW)</label>
-      <input type="range" id="setpoint" min="0" max="100" value="0" step="1">
-      <span id="setpoint-out">0 kW</span>
-    </div>
-  </div>
+  <div class="sim-card" id="sim-card">
 
-  <svg width="100%" viewBox="0 0 680 340" role="img" style="margin-bottom:12px">
-    <title>Diagrama de fluxo de potência com valores em cada ponto</title>
-    <defs>
-      <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"/>
-      </marker>
-    </defs>
+    <div class="controls">
+      <div class="control-row">
+        <label for="carga">Carga (kW)</label>
+        <input type="range" id="carga" min="0" max="150" value="60" step="1">
+        <span id="carga-out">60 kW</span>
+      </div>
+      <div class="control-row">
+        <label for="geracao">Geração disponível (kW)</label>
+        <input type="range" id="geracao" min="0" max="150" value="40" step="1">
+        <span id="geracao-out">40 kW</span>
+      </div>
+      <div class="control-row">
+        <label for="setpoint">Limite de Potência Injetável (LPI) (kW)</label>
+        <input type="range" id="setpoint" min="0" max="100" value="0" step="1">
+        <span id="setpoint-out">0 kW</span>
+      </div>
+    </div>
 
-    <g id="sun-group" transform="translate(590,124)">
-      <circle id="sun-glow" r="20" fill="#f5c451" opacity="0.15"/>
-      <g id="sun-rays" stroke="#f5c451" stroke-width="2" stroke-linecap="round">
-        <line x1="0" y1="-22" x2="0" y2="-15"/>
-        <line x1="15.6" y1="-15.6" x2="10.6" y2="-10.6"/>
-        <line x1="22" y1="0" x2="15" y2="0"/>
-        <line x1="15.6" y1="15.6" x2="10.6" y2="10.6"/>
-        <line x1="0" y1="22" x2="0" y2="15"/>
-        <line x1="-15.6" y1="15.6" x2="-10.6" y2="10.6"/>
-        <line x1="-22" y1="0" x2="-15" y2="0"/>
-        <line x1="-15.6" y1="-15.6" x2="-10.6" y2="-10.6"/>
+    <svg width="100%" viewBox="0 0 680 340" role="img" style="margin-bottom:12px">
+      <title>Diagrama de fluxo de potência com valores em cada ponto</title>
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5"/>
+        </marker>
+      </defs>
+
+      <rect x="20" y="100" width="130" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="85" y="128" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Rede</text>
+
+      <rect x="275" y="100" width="150" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="350" y="120" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Medição</text>
+      <text id="med-val" x="350" y="140" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="var(--text-primary)">-20 kW</text>
+
+      <rect x="520" y="30" width="140" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="590" y="50" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Carga</text>
+      <text id="carga-val" x="590" y="70" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--text-secondary)">60 kW</text>
+
+      <rect x="520" y="170" width="140" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="590" y="190" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Usina</text>
+      <text id="usina-val" x="590" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--text-secondary)">40 kW</text>
+
+      <g id="sun-group" transform="translate(590,124)">
+        <circle id="sun-glow" r="20" fill="#f5c451" opacity="0.15"/>
+        <g id="sun-rays" stroke="#f5c451" stroke-width="2" stroke-linecap="round">
+          <line x1="0" y1="-22" x2="0" y2="-15"/>
+          <line x1="15.6" y1="-15.6" x2="10.6" y2="-10.6"/>
+          <line x1="22" y1="0" x2="15" y2="0"/>
+          <line x1="15.6" y1="15.6" x2="10.6" y2="10.6"/>
+          <line x1="0" y1="22" x2="0" y2="15"/>
+          <line x1="-15.6" y1="15.6" x2="-10.6" y2="10.6"/>
+          <line x1="-22" y1="0" x2="-15" y2="0"/>
+          <line x1="-15.6" y1="-15.6" x2="-10.6" y2="-10.6"/>
+        </g>
+        <circle id="sun-core" r="9" fill="#f5c451"/>
       </g>
-      <circle id="sun-core" r="9" fill="#f5c451"/>
-    </g>
-    <text id="sun-pct" x="590" y="166" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-secondary)">27%</text>
+      <text id="sun-pct" x="590" y="166" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-secondary)">27%</text>
 
-    <rect x="20" y="100" width="130" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="85" y="128" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Rede</text>
+      <rect x="275" y="270" width="150" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
+      <text x="350" y="298" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">PCC</text>
 
-    <rect x="275" y="100" width="150" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="350" y="120" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Medição</text>
-    <text id="med-val" x="350" y="140" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="500" fill="var(--text-primary)">-20 kW</text>
+      <line id="rede-med" x1="150" y1="128" x2="275" y2="128" stroke="#2a78d6" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+      <text id="rede-med-label" x="212" y="112" text-anchor="middle" font-size="12" fill="var(--text-secondary)">20 kW importados</text>
 
-    <rect x="520" y="30" width="140" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="590" y="50" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Carga</text>
-    <text id="carga-val" x="590" y="70" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--text-secondary)">60 kW</text>
+      <path id="trunk-lower" d="M520 198 L460 198 L460 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6"/>
+      <path id="med-branch" d="M460 128 L427 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+      <path id="trunk-upper" d="M460 128 L460 58 L518 58" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
+      <text id="carga-flow-label" x="490" y="45" text-anchor="middle" font-size="12" fill="#9aa39a" opacity="0">20 kW da rede</text>
 
-    <rect x="520" y="170" width="140" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="590" y="190" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Usina</text>
-    <text id="usina-val" x="590" y="210" text-anchor="middle" dominant-baseline="central" font-size="13" fill="var(--text-secondary)">40 kW</text>
+      <line x1="350" y1="156" x2="350" y2="268" stroke="#378ADD" stroke-width="1.5"/>
+      <path d="M425 298 L590 298 L590 228" fill="none" stroke="#378ADD" stroke-width="1.5"/>
+    </svg>
+    <img src="https://hacon.tech/img/hacon-logo.png" alt="HACON" class="logo-diagrama">
 
-    <rect x="275" y="270" width="150" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="350" y="298" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">PCC</text>
+    <div id="cond-banner" style="text-align:center;font-size:14px;font-weight:500;margin-bottom:20px;padding:8px;border-radius:8px;background:var(--card)">Importando 20 kW da rede</div>
 
-    <line id="rede-med" x1="150" y1="128" x2="275" y2="128" stroke="#2a78d6" stroke-width="2.5" stroke-dasharray="6 6" marker-end="url(#ah)"/>
-    <text id="rede-med-label" x="212" y="112" text-anchor="middle" font-size="12" fill="var(--text-secondary)">20 kW importados</text>
+    <div class="chart-wrap">
+      <canvas id="chart" role="img" aria-label="Gráfico de carga, geração aplicada e fluxo no PCC ao longo do tempo, reagindo aos controles"></canvas>
+    </div>
+    <div class="legend">
+      <span><span class="dot" style="background:#eb6834"></span>Carga</span>
+      <span><span class="dot" style="background:#1baf7a"></span>Geração aplicada</span>
+      <span><span class="dot" style="background:#2a78d6"></span>PCC</span>
+      <span><span class="dash" style="background:#898781"></span>LPI</span>
+    </div>
 
-    <path id="trunk-lower" d="M520 198 L460 198 L460 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6"/>
-    <path id="med-branch" d="M460 128 L427 128" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
-    <path id="trunk-upper" d="M460 128 L460 58 L518 58" fill="none" stroke="#1baf7a" stroke-width="2" stroke-dasharray="6 6" marker-end="url(#ah)"/>
-    <text id="carga-flow-label" x="490" y="45" text-anchor="middle" font-size="12" fill="#9aa39a" opacity="0">20 kW da rede</text>
+    <p class="sim-note">Simulador educativo do curso Grid Zero na Prática. Os valores exibidos são ilustrativos e não substituem o dimensionamento técnico de projeto.</p>
 
-    <line x1="350" y1="156" x2="350" y2="268" stroke="#378ADD" stroke-width="1.5"/>
-    <path d="M425 298 L590 298 L590 228" fill="none" stroke="#378ADD" stroke-width="1.5"/>
-  </svg>
-
-  <div id="cond-banner" style="text-align:center;font-size:14px;font-weight:500;margin-bottom:20px;padding:8px;border-radius:8px;background:var(--card)">Importando 20 kW da rede</div>
-
-  <div class="chart-wrap">
-    <canvas id="chart" role="img" aria-label="Gráfico de carga, geração aplicada e fluxo no PCC ao longo do tempo, reagindo aos controles"></canvas>
+    <button id="export-btn" type="button" class="export-btn">
+      <span aria-hidden="true">⬇</span> Exportar imagem deste cenário
+    </button>
   </div>
-  <div class="legend">
-    <span><span class="dot" style="background:#eb6834"></span>Carga</span>
-    <span><span class="dot" style="background:#1baf7a"></span>Geração aplicada</span>
-    <span><span class="dot" style="background:#2a78d6"></span>PCC</span>
-    <span><span class="dash" style="background:#898781"></span>LPI</span>
+
+  <div class="explicacao">
+    <h2>Como usar o simulador</h2>
+    <p>Esse simulador reproduz, de forma simplificada, o que um controlador de exportação faz em tempo real: medir, comparar com o limite definido e ajustar a geração. Ajuste os três controles abaixo e observe o diagrama e o gráfico reagindo.</p>
+
+    <h3>1. Os três controles</h3>
+    <ul>
+      <li><strong>Carga (kW)</strong> — quanto a instalação está consumindo naquele momento.</li>
+      <li><strong>Geração disponível (kW)</strong> — quanto a usina teria capacidade de gerar, sem nenhum tipo de controle.</li>
+      <li><strong>LPI (kW)</strong> — o Limite de Potência Injetável: o quanto a instalação tem permissão de exportar para a rede. Em <strong>0 kW</strong>, o sistema opera em exportação zero (Grid Zero "puro"). Em qualquer valor acima disso, o sistema permite exportar até aquele limite.</li>
+    </ul>
+
+    <h3>2. Como ler o diagrama</h3>
+    <p>O diagrama mostra cinco pontos — <strong>Rede</strong>, <strong>Medição</strong>, <strong>Carga</strong>, <strong>Usina</strong> e <strong>PCC</strong> (o ponto de conexão) — e os valores dentro de cada quadro mudam junto com os controles. O sol acima da Usina varia de intensidade conforme a geração aplicada.</p>
+    <ul>
+      <li><span class="cor-tag" style="background:#1baf7a"></span><strong>Verde</strong> — energia sendo gerada pela usina, seja abastecendo a carga ou saindo para a rede (exportação).</li>
+      <li><span class="cor-tag" style="background:#eda100"></span><strong>Amarelo</strong> — energia vindo da rede para completar o que a usina não consegue suprir sozinha (importação).</li>
+      <li><span class="cor-tag" style="background:#e34948"></span><strong>Vermelho</strong> — indicador no quadro "Medição" quando há importação da rede.</li>
+    </ul>
+    <p>Logo abaixo do diagrama, uma faixa de texto resume a condição atual em palavras — por exemplo, "Geração insuficiente: carga suprida pela usina e pela rede".</p>
+
+    <h3>3. Como ler o gráfico</h3>
+    <p>O gráfico mostra a resposta do controlador ao longo do tempo. Ele não muda instantaneamente — assim como um controlador real, ele leva uma fração de segundo pra se ajustar a cada mudança que você faz nos controles.</p>
+
+    <h3>4. Três cenários pra testar</h3>
+    <div class="exemplo">
+      <b>Exportação zero clássica</b>
+      <p style="margin:6px 0 0">Deixe Carga em 60, Geração em 100 e LPI em 0. Veja que a "Geração aplicada" trava em 60 kW — o controlador segura a usina exatamente no que a carga consome, mesmo ela tendo capacidade de gerar mais.</p>
+    </div>
+    <div class="exemplo">
+      <b>Exportação limitada</b>
+      <p style="margin:6px 0 0">Carga em 60, Geração em 200, LPI em 95. A geração aplicada trava em 155 kW (60 de carga + 95 de limite) — o PCC fica exatamente em +95 kW de exportação, mesmo a usina tendo 200 kW disponíveis.</p>
+    </div>
+    <div class="exemplo">
+      <b>Rede insuficiente</b>
+      <p style="margin:6px 0 0">Carga em 100, Geração em 30, LPI em qualquer valor. Repare que o LPI não faz diferença nesse cenário — quando a geração já é menor que a carga, não existe exportação a ser limitada, e a rede completa o restante.</p>
+    </div>
   </div>
 
   <footer>HACON — Hoeschl Automação e Controle Ltda. Simulador educativo do curso Grid Zero na Prática.</footer>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
-document.getElementById('btn-imprimir').addEventListener('click', function () {
-  window.print();
-});
-
-document.getElementById('btn-baixar-png').addEventListener('click', function () {
-  const btn = this;
-  const area = document.getElementById('capture-area');
-  btn.style.visibility = 'hidden';
-  html2canvas(area, { backgroundColor: '#0a0f0a', scale: 2 }).then(function (canvas) {
-    btn.style.visibility = 'visible';
-    const link = document.createElement('a');
-    link.download = 'simulador-grid-zero-hacon.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-  });
-});
-
-const N = 40;
+const N = 150;
 let labels = Array.from({length:N}, (_,i)=>i);
 let cargaHist = Array(N).fill(60);
 let geraHist = Array(N).fill(40);
@@ -224,9 +287,16 @@ function updateReadouts(){
   document.getElementById('setpoint-out').textContent = setpoint + ' kW';
 }
 
+function updateSliderFill(input){
+  const min = Number(input.min) || 0;
+  const max = Number(input.max) || 100;
+  const pct = ((Number(input.value) - min) / (max - min)) * 100;
+  input.style.setProperty('--val', pct + '%');
+}
+
 function tick(){
   const geraAlvo = Math.min(geracaoDisp, carga + setpoint);
-  geraAplicadaAtual += (geraAlvo - geraAplicadaAtual) * 0.25;
+  geraAplicadaAtual += (geraAlvo - geraAplicadaAtual) * 0.06;
   const pcc = geraAplicadaAtual - carga;
 
   cargaHist.shift(); cargaHist.push(carga);
@@ -258,7 +328,7 @@ function tick(){
   sunRays.setAttribute('stroke', cor);
   sunRays.setAttribute('stroke-width', (0.6 + intensidade * 3.4).toFixed(1));
   sunRays.setAttribute('opacity', (0.04 + intensidade * 0.96).toFixed(2));
-  sunGiro = (sunGiro + 1.2 + intensidade * 3.5) % 360;
+  sunGiro = (sunGiro + 1.3 + intensidade * 3.7) % 360;
   sunRays.setAttribute('transform', 'rotate(' + sunGiro.toFixed(1) + ')');
   sunPct.textContent = Math.round(intensidade * 100) + '%';
   sunPct.setAttribute('fill', cor);
@@ -320,12 +390,51 @@ function tick(){
   }
 }
 
-document.getElementById('carga').addEventListener('input', e => { carga = Number(e.target.value); updateReadouts(); });
-document.getElementById('geracao').addEventListener('input', e => { geracaoDisp = Number(e.target.value); updateReadouts(); });
-document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); });
+document.getElementById('carga').addEventListener('input', e => { carga = Number(e.target.value); updateReadouts(); updateSliderFill(e.target); });
+document.getElementById('geracao').addEventListener('input', e => { geracaoDisp = Number(e.target.value); updateReadouts(); updateSliderFill(e.target); });
+document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); updateSliderFill(e.target); });
 
+document.querySelectorAll('input[type="range"]').forEach(updateSliderFill);
 updateReadouts();
 setInterval(tick, 400);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+document.getElementById('export-btn').addEventListener('click', function () {
+  const btn = this;
+  const originalText = btn.innerHTML;
+  btn.innerHTML = 'Gerando imagem...';
+  btn.disabled = true;
+
+  const images = Array.from(document.querySelectorAll('#sim-card img'));
+  const waitForImages = Promise.all(images.map(img => {
+    if (img.complete) return Promise.resolve();
+    return new Promise(resolve => { img.onload = resolve; img.onerror = resolve; });
+  }));
+
+  waitForImages.then(function () {
+    return html2canvas(document.getElementById('sim-card'), {
+      backgroundColor: '#0a0f0a',
+      scale: 2,
+      useCORS: true,
+      allowTaint: true,
+      imageTimeout: 3000
+    });
+  }).then(function (canvas) {
+    const link = document.createElement('a');
+    const timestamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, '-');
+    link.download = 'grid-zero-simulador-' + timestamp + '.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    btn.innerHTML = originalText;
+    btn.disabled = false;
+  }).catch(function (err) {
+    console.error('Erro ao exportar imagem:', err);
+    btn.innerHTML = 'Erro — tente novamente';
+    setTimeout(() => { btn.innerHTML = originalText; btn.disabled = false; }, 2500);
+  });
+});
 </script>
 </body>
 </html>
