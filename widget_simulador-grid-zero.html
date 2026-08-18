@@ -52,10 +52,31 @@
   .dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
   .dash { width: 14px; height: 2px; display: inline-block; }
   footer { margin-top: 32px; font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 16px; }
+  .card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; gap: 12px; }
+  .card-top img { height: 28px; width: auto; display: block; }
+  .card-actions { display: flex; gap: 8px; flex-shrink: 0; }
+  .print-btn {
+    background: var(--verde); color: #06210a; border: none; padding: 9px 18px;
+    border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'Poppins', sans-serif; transition: opacity .15s;
+  }
+  .print-btn:hover { opacity: .88; }
+  .print-btn.outline { background: transparent; color: var(--verde); border: 1.5px solid var(--verde); }
+  @media print {
+    .card-actions { display: none; }
+    body { padding: 0; }
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap" id="capture-area">
+  <div class="card-top">
+    <img src="https://hacon.tech/img/hacon-logo.png" alt="HACON — Hoeschl Automação e Controle">
+    <div class="card-actions">
+      <button class="print-btn outline" id="btn-imprimir">Imprimir</button>
+      <button class="print-btn" id="btn-baixar-png">Baixar PNG</button>
+    </div>
+  </div>
   <h1>Simulador de controle de exportação</h1>
   <p class="sub">Ajuste carga, geração disponível e Limite de Potência Injetável (LPI) e veja o efeito no fluxo de potência no PCC — HACON, Curso Grid Zero na Prática</p>
 
@@ -147,7 +168,25 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
+document.getElementById('btn-imprimir').addEventListener('click', function () {
+  window.print();
+});
+
+document.getElementById('btn-baixar-png').addEventListener('click', function () {
+  const btn = this;
+  const area = document.getElementById('capture-area');
+  btn.style.visibility = 'hidden';
+  html2canvas(area, { backgroundColor: '#0a0f0a', scale: 2 }).then(function (canvas) {
+    btn.style.visibility = 'visible';
+    const link = document.createElement('a');
+    link.download = 'simulador-grid-zero-hacon.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+});
+
 const N = 40;
 let labels = Array.from({length:N}, (_,i)=>i);
 let cargaHist = Array(N).fill(60);
