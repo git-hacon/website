@@ -85,6 +85,22 @@
       </marker>
     </defs>
 
+    <g id="sun-group" transform="translate(590,124)">
+      <circle id="sun-glow" r="20" fill="#f5c451" opacity="0.15"/>
+      <g id="sun-rays" stroke="#f5c451" stroke-width="2" stroke-linecap="round">
+        <line x1="0" y1="-22" x2="0" y2="-15"/>
+        <line x1="15.6" y1="-15.6" x2="10.6" y2="-10.6"/>
+        <line x1="22" y1="0" x2="15" y2="0"/>
+        <line x1="15.6" y1="15.6" x2="10.6" y2="10.6"/>
+        <line x1="0" y1="22" x2="0" y2="15"/>
+        <line x1="-15.6" y1="15.6" x2="-10.6" y2="10.6"/>
+        <line x1="-22" y1="0" x2="-15" y2="0"/>
+        <line x1="-15.6" y1="-15.6" x2="-10.6" y2="-10.6"/>
+      </g>
+      <circle id="sun-core" r="9" fill="#f5c451"/>
+    </g>
+    <text id="sun-pct" x="590" y="166" text-anchor="middle" font-size="11" font-weight="600" fill="var(--text-secondary)">27%</text>
+
     <rect x="20" y="100" width="130" height="56" rx="8" fill="var(--card)" stroke="var(--border)"/>
     <text x="85" y="128" text-anchor="middle" dominant-baseline="central" font-size="14" font-weight="500" fill="var(--text-primary)">Rede</text>
 
@@ -140,6 +156,7 @@ let pccHist = Array(N).fill(-20);
 let setHist = Array(N).fill(0);
 
 let carga = 60, geracaoDisp = 40, setpoint = 0;
+let sunGiro = 0;
 let geraAplicadaAtual = 40;
 
 const ctx = document.getElementById('chart');
@@ -186,6 +203,27 @@ function tick(){
 
   document.getElementById('carga-val').textContent = carga + ' kW';
   document.getElementById('usina-val').textContent = Math.round(geraAplicadaAtual) + ' kW';
+
+  const intensidade = Math.max(0, Math.min(1, geraAplicadaAtual / 150));
+  const sunCore = document.getElementById('sun-core');
+  const sunGlow = document.getElementById('sun-glow');
+  const sunRays = document.getElementById('sun-rays');
+  const sunPct = document.getElementById('sun-pct');
+  const raio = 3 + intensidade * 14;
+  sunCore.setAttribute('r', raio.toFixed(1));
+  sunGlow.setAttribute('r', (raio * 2.6).toFixed(1));
+  sunGlow.setAttribute('opacity', (0.06 + intensidade * 0.34).toFixed(2));
+  const cor = intensidade > 0.65 ? '#ff9d1f' : (intensidade > 0.3 ? '#f5c451' : '#4d4a38');
+  sunCore.setAttribute('fill', cor);
+  sunGlow.setAttribute('fill', cor);
+  sunRays.setAttribute('stroke', cor);
+  sunRays.setAttribute('stroke-width', (0.6 + intensidade * 3.4).toFixed(1));
+  sunRays.setAttribute('opacity', (0.04 + intensidade * 0.96).toFixed(2));
+  sunGiro = (sunGiro + 1.2 + intensidade * 3.5) % 360;
+  sunRays.setAttribute('transform', 'rotate(' + sunGiro.toFixed(1) + ')');
+  sunPct.textContent = Math.round(intensidade * 100) + '%';
+  sunPct.setAttribute('fill', cor);
+  document.getElementById('sun-group').setAttribute('transform', 'translate(590,124) scale(' + (0.3 + intensidade * 1.7).toFixed(2) + ')');
 
   const medVal = document.getElementById('med-val');
   const banner = document.getElementById('cond-banner');
@@ -248,7 +286,7 @@ document.getElementById('geracao').addEventListener('input', e => { geracaoDisp 
 document.getElementById('setpoint').addEventListener('input', e => { setpoint = Number(e.target.value); updateReadouts(); });
 
 updateReadouts();
-setInterval(tick, 150);
+setInterval(tick, 400);
 </script>
 </body>
 </html>
